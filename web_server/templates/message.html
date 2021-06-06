@@ -1,0 +1,17 @@
+<html>
+<head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+</head>
+<body>
+<form id="form" action="/">
+</form>
+</body>
+<script>
+{% if message %}
+alert('{{message}}');
+{% endif %}
+        document.getElementById("form").submit();
+
+</script>
+</html>
