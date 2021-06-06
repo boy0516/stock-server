@@ -2,17 +2,17 @@
 
 
 # 내일은 투자왕(모의주식사이트)
-![img](README.assets/내일은 투자왕_발표_pages-to-jpg-0017.jpg)
+![img](README.assets/pages-to-jpg-0017.jpg)
 
 
 
-![img](README.assets/내일은 투자왕_발표_pages-to-jpg-0016.jpg)
+![img](README.assets/pages-to-jpg-0016.jpg)
 
 
 
 ## 쿠버네티스 설치
 
-![img](README.assets/내일은 투자왕_발표_pages-to-jpg-0019.jpg)
+![img](README.assets/pages-to-jpg-0019.jpg)
 
 - 각 노드들에 쿠버네티스 설치를 위해서 KOPS를 이용하였습니다.
 
@@ -24,13 +24,13 @@
 
 ## DB 연동
 
-![img](README.assets/내일은 투자왕_발표_pages-to-jpg-0020.jpg)
+![img](README.assets/pages-to-jpg-0020.jpg)
 
 - 데이터베이스는 AWS의 RDS서비스를 이용하여서 구축하였습니다. RDS는 Mysql을 설치하였고 MSA적 특성을 살리기 위해 두개의 데이터베이스를 구축하였습니다. 
 
 
 
-![img](README.assets/내일은 투자왕_발표_pages-to-jpg-0023.jpg)
+![img](README.assets/pages-to-jpg-0023.jpg)
 
 - 두개의 데이터베이스는 주식 시세정보가 담긴 StockInfos 테이블과 종목정보가 담긴 Stocks테이블을 가지고 있습니다. 이 두 테이블은 같은 내용을 가져야하므로 이를 동기화 시켜줄 필요가 있는데 이를 위해서 카프카의 메시지 큐잉서비스를 사용했습니다.
 
@@ -38,11 +38,11 @@
 
 
 
-![img](README.assets/내일은 투자왕_발표_pages-to-jpg-0024.jpg)
+![img](README.assets/pages-to-jpg-0024.jpg)
 
 
 
-![img](README.assets/내일은 투자왕_발표_pages-to-jpg-0025.jpg)
+![img](README.assets/pages-to-jpg-0025.jpg)
 
 - 주식정보 파싱 서비스는 총 5개의 파드로 구성하였는데 각 파드별로 하나의 종목의 시세정보를 파싱해옵니다. 그리고 카프카 프로듀서를 생성해서 카프카 토픽에 스키마 정보를 전달하면 싱크커넥터를 통해 데이터베이스로 데이터가 됩니다.
 
@@ -52,7 +52,7 @@
 
 
 
-![img](README.assets/내일은 투자왕_발표_pages-to-jpg-0027.jpg)
+![img](README.assets/pages-to-jpg-0027.jpg)
 
 - 카프카를 이용해서 데이터베이스 동기화를 위해서는 주키퍼서버와 카프카서버, 그리고 카프카 커넥터 서버가 필요합니다. 
 - 이 서버들은 각각 파드로 생성되기 때문에 파드간에 통신을 위해서 서비스를 생성해주어야 합니다. 
@@ -62,19 +62,19 @@
 
 
 
-![img](README.assets/내일은 투자왕_발표_pages-to-jpg-0029.jpg)
+![img](README.assets/pages-to-jpg-0029.jpg)
 
 - Git-sync를 이용해서 github의 리포지토리에 저장된 데이터를 볼륨으로 생성하고 파드에서 볼륨마운트 해서 사용할 수 있습니다. 이렇게 하면 코드는 깃에 저장되어있기 때문에 재배포 없이 코드를 수정할 수 있습니다. 
 
 
 
-![img](README.assets/내일은 투자왕_발표_pages-to-jpg-0030.jpg)
+![img](README.assets/pages-to-jpg-0030.jpg)
 
 - AWS SNS 서비스를 이용해서 카프카 토픽에 특정 기준을 만족하는 주식정보가 들어오면 사용자에게 메시지가 전송됩니다. 
 
 
 
-![img](README.assets/내일은 투자왕_발표_pages-to-jpg-0031.jpg)
+![img](README.assets/pages-to-jpg-0031.jpg)
 
 - Consul KV 주요 용도는 구성 매개 변수와 메타 데이터를 저장하는 것입니다. DB에 접근하거나 jwt토큰생성에 필요한 config정보를 kv로 컨설서버에 저장해서 config정보가 하드코딩 되지 않도록 했고, 또한 주식종목같이 서비스 도중 변경할 가능성이 있는 정보도 kv에 저장하여 서비스도중에 kv정보만 변경해주면 재배포하지 않아도 서비스를 변경할 수 있도록 했습니다.
 
